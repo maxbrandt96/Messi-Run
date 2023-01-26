@@ -226,9 +226,10 @@ let time = 0
 let btn = document.getElementById("play")
 
 btn.addEventListener("click", () => {
+    
     startGame()
 
-    btn.classList.add("none")
+    button.style.display = 'none';
 })
 
 setInterval(() => {
@@ -237,6 +238,8 @@ setInterval(() => {
     enemies.push(a)
     
 }, 2500)
+
+setTimeout((player.shoot(),3000))
 
 setInterval(() => {
    
