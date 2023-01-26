@@ -95,7 +95,11 @@ document.addEventListener("keydown", (event) => {
             break;
 
         case "ArrowUp":
-            player.velocity.y -=10
+            if (player.position.y >=360){
+            player.velocity.y -=11}
+            else if (player.position.y < 360){
+                player.velocity.y = 0
+            }
             break;
 
         case "ArrowDown":
@@ -164,7 +168,7 @@ class Enemy {
 
     draw(){
         ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
-        this.x -= 2
+        this.x -= 7
     }
 }
 
@@ -232,16 +236,16 @@ setInterval(() => {
     a.img = mbappe
     enemies.push(a)
     
-}, 3500)
+}, 2500)
 
 setInterval(() => {
    
     const huntelaar = new Enemy(800, 275,200,150)
     huntelaar.img = huntelaarImg
-    huntelaar.x -= 100
+    huntelaar.x -= 100 
     enemies.push(huntelaar)
 
-}, 1000)
+}, 3000)
 
 function mostrarVidas() {
     if(player.lives ===3){
