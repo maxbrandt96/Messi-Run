@@ -1,8 +1,10 @@
 const canvas = document.getElementById("juego")
 
 const ctx = canvas.getContext("2d")
-console.log(ctx)
 
+
+const menu = document.querySelector(".botones")
+const gameOver = document.querySelector(".gameOver")
 canvas.width = 800
 canvas.height = 460
 
@@ -11,6 +13,8 @@ const balls = []
 const enemies = []
 
 const gravity = 0.5
+
+const cups = []
 
 const ballImg = new Image()
 ballImg.src = "/assets/ball.png"
@@ -22,7 +26,16 @@ const messiImg = new Image()
 messiImg.src = "/assets/Icon.png"
 
 const huntelaarImg = new Image()
-huntelaarImg.src = "/assets/hunt1.png"
+huntelaarImg.src = "/assets/huntelaar4.png"
+
+const worldCupImg = new Image()
+worldCupImg.src = "/assets/worldcup.png"
+
+const shoot = new Audio("/assets/kick1.wav")
+const bobo = new Audio("/assets/AndaPaLla.mp3")
+const sui = new Audio("/assets/SUIII.mp3")
+const uefa = new Audio("/assets/champions.mp3")
+uefa.volume = 0.1
 
 class Player {
     constructor(){
@@ -39,6 +52,7 @@ class Player {
         this.img = messiImg
         this.elims = 0
         this.lives = 3
+        this.worldCups = 0
         }
 
 
@@ -60,10 +74,9 @@ update(){
 }
 
 shoot() {
-    console.log("shoot")
     const ball = new Ball(this.position.x + this.w, this.position.y + (this.h / 1.5))
     balls.push(ball)
-    console.log(balls)
+    shoot.play()
 }
 
 
@@ -81,10 +94,10 @@ const keys = {
     }
 
 }
-console.log(player)
+
 
 document.addEventListener("keydown", (event) => {
-    // console.log(evento.key)
+   
     switch (event.key) {
         case "ArrowRight":
             keys.right.pressed = true
@@ -109,11 +122,10 @@ document.addEventListener("keydown", (event) => {
             player.shoot()
             break
     }
-    console.log(keys.right.pressed)
-    console.log(keys.left.pressed)
+   
 })
 document.addEventListener("keyup", (event) => {
-    // console.log(evento.key)
+    
     switch (event.key) {
         case "ArrowRight":
             keys.right.pressed = false
@@ -122,7 +134,7 @@ document.addEventListener("keyup", (event) => {
            keys.left.pressed = false
             break;
         case "ArrowUp":
-            console.log("up")
+          
             
             break;
         case "ArrowDown":
@@ -132,8 +144,7 @@ document.addEventListener("keyup", (event) => {
             
             break
     }
-    console.log(keys.right.pressed)
-    console.log(keys.left.pressed)
+   
 
 })
 
@@ -172,13 +183,25 @@ class Enemy {
     }
 }
 
+class WordlCup{
+    constructor(x,){
+        this.x = x
+        this.y = 0
+        this.img = worldCupImg
+    }
+
+    draw(){
+        this.y++
+        ctx.drawImage(worldCupImg, this.x, this.y, 70, 70)
+    }
+}
 
 
 ctx.fillStyle = "white"
 let time = 0
     function startGame(){
     setInterval(() => {
-        console.log("playing")
+    
        ctx.clearRect(0, 0, 800, 460)
         player.update()
 
@@ -198,7 +221,7 @@ let time = 0
             ball.draw()
 
             enemies.forEach((enemy,indexEnemy) =>{
-                if (enemy.x <= ball.x + 10 && ball.y + 20 >= enemy.y && ball.x <= enemy.x && ball.y <= enemy.y + 90){
+                if (enemy.x <= ball.x + 10 && ball.y + 20 >= enemy.y && ball.x <= enemy.x && ball.y <= enemy.y + enemy.h){
                 enemies.splice(indexEnemy, 1)
                 balls.splice(indexBall, 1)
                 player.elims++
@@ -208,17 +231,43 @@ let time = 0
         })
         enemies.forEach((enemy, indexEnemy) => {
             enemy.draw()
-            if (enemy.x <= player.position.x + 10 && player.position.y + 50 >= enemy.y && player.position.x <= enemy.x && player.position.y <= enemy.y + 80){
+            if (enemy.x <= player.position.x + 10 && player.position.y + 90 >= enemy.y && player.position.x <= enemy.x && player.position.y <= enemy.y + 80){
                 enemies.splice(indexEnemy, 1)
                 player.lives--
+                bobo.play()
+                if (player.lives <= 0){
+                    setGameOver()
+                    bobo.pause()
+                }
+                if (player.lives < 0)
+                sui.pause()
+                
             }
 
         })
+            
+        cups.forEach((cup, indexCup) => {
+            cup.draw()
+            if(cup.y >= 560){
+                
+                cups.splice(indexCup, 1)
+            }
+
+            if(cup.x <= player.position.x + 10 && player.position.y + 50 >= cup.y && player.position.x <= cup.x && player.position.y <= cup.y + 80){
+                player.worldCups++
+                cups.splice(indexCup, 1)
+            }
+            
+            })
         
-        ctx.fillText(`${player.elims} Eliminations`, 150, 150)
+        ctx.fillText(`${player.elims} ELIMINACIONES`, 500, 50, 150)
+        ctx.font = "25px Arial Black"
+        ctx.fillStyle = "Black"
 
         mostrarVidas()
-
+        
+        ctx.fillText(`${player.worldCups} COPAS `, 100, 50)
+        
     }, 1000 / 60)
     
 }
@@ -226,10 +275,11 @@ let time = 0
 let btn = document.getElementById("play")
 
 btn.addEventListener("click", () => {
-    
     startGame()
+    createWorldCup()
+    uefa.play()
 
-    button.style.display = 'none';
+    btn.style.display = 'none';
 })
 
 setInterval(() => {
@@ -239,13 +289,12 @@ setInterval(() => {
     
 }, 2500)
 
-setTimeout((player.shoot(),3000))
+
 
 setInterval(() => {
    
-    const huntelaar = new Enemy(800, 275,200,150)
+    const huntelaar = new Enemy(800, 285,80,76)
     huntelaar.img = huntelaarImg
-    huntelaar.x -= 100 
     enemies.push(huntelaar)
 
 }, 3000)
@@ -261,11 +310,30 @@ function mostrarVidas() {
     if(player.lives === 2){
         ctx.drawImage(messiImg, 720, 20, 30, 50)  
         ctx.drawImage(messiImg, 760, 20, 30, 50)  
-
+        
     }
 
     if(player.lives ===1){  
         ctx.drawImage(messiImg, 760, 20, 30, 50)  
-
+       
     }
+}
+
+
+function createWorldCup(){
+    setInterval(() => {
+        const randomPosition = Math.floor(Math.random()*750)
+        const cup = new WordlCup(randomPosition)
+            cups.push(cup)
+    }, 5000)
+    
+}
+
+function setGameOver(){     
+    sui.play()
+    canvas.classList.add("none")
+    menu.classList.add("none")
+    gameOver.classList.remove("none")
+    let perdiste = document.getElementById("perdiste")
+    perdiste.innerHTML = `RECOLECTASTE ${player.worldCups} COPAS DEL MUNDO`
 }
