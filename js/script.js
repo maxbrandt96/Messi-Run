@@ -17,24 +17,24 @@ const gravity = 0.5
 const cups = []
 
 const ballImg = new Image()
-ballImg.src = "/assets/ball.png"
+ballImg.src = "/assets/img/ball.png"
 
 const mbappe = new Image()
-mbappe.src = "/assets/cr7pixl.png"
+mbappe.src = "/assets/img/cr7pixl.png"
 
 const messiImg = new Image()
-messiImg.src = "/assets/Icon.png"
+messiImg.src = "/assets/img/Icon.png"
 
 const huntelaarImg = new Image()
-huntelaarImg.src = "/assets/huntelaar4.png"
+huntelaarImg.src = "/assets/img/huntelaar4.png"
 
 const worldCupImg = new Image()
-worldCupImg.src = "/assets/worldcup.png"
+worldCupImg.src = "/assets/img/worldcup.png"
 
-const shoot = new Audio("/assets/kick1.wav")
-const bobo = new Audio("/assets/AndaPaLla.mp3")
-const sui = new Audio("/assets/SUIII.mp3")
-const uefa = new Audio("/assets/champions.mp3")
+const shoot = new Audio("/assets/audio/kick1.wav")
+const bobo = new Audio("/assets/audio/AndaPaLla.mp3")
+const sui = new Audio("/assets/audio/SUIII.mp3")
+const uefa = new Audio("/assets/audio/champions.mp3")
 uefa.volume = 0.1
 
 class Player {
@@ -212,10 +212,6 @@ let time = 0
             }
             else player.velocity.x = 0
         
-
-        
-        
-        
         balls.forEach((ball,indexBall) => {
            ball.x += 2
             ball.draw()
@@ -252,33 +248,25 @@ let time = 0
                 
                 cups.splice(indexCup, 1)
             }
-
             if(cup.x <= player.position.x + 10 && player.position.y + 50 >= cup.y && player.position.x <= cup.x && player.position.y <= cup.y + 80){
                 player.worldCups++
                 cups.splice(indexCup, 1)
-            }
-            
+            } 
             })
-        
         ctx.fillText(`${player.elims} ELIMINACIONES`, 500, 50, 150)
         ctx.font = "25px Arial Black"
         ctx.fillStyle = "Black"
 
         mostrarVidas()
         
-        ctx.fillText(`${player.worldCups} COPAS `, 100, 50)
-        
-    }, 1000 / 60)
-    
+        ctx.fillText(`${player.worldCups} COPAS `, 100, 50)     
+    }, 1000 / 60) 
 }
-
 let btn = document.getElementById("play")
-
 btn.addEventListener("click", () => {
     startGame()
     createWorldCup()
     uefa.play()
-
     btn.style.display = 'none';
 })
 

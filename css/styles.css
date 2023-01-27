@@ -7,7 +7,7 @@
 body{
     width: 100%;
     height: 100vh;
-    background-image: url(/assets/mainBack2.png);
+    background-image: url(/assets/img/mainBack2.png);
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -21,7 +21,7 @@ body{
 
 canvas{
     border: 12px solid black;
-    background-image: url(/assets/back2.jpg);
+    background-image: url(/assets/img/back2.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     margin-top: 70px;
@@ -46,7 +46,7 @@ button{
 .gameOver{
     width: 100vw;
     height: 100vh;
-    background-image: url("/assets/perdiste3.png");
+    background-image: url("/assets/img/perdiste3.png");
     background-size: cover;
     background-repeat: no-repeat;
     display: flex;
